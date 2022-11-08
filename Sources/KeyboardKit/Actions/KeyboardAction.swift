@@ -23,6 +23,49 @@ import Foundation
  don't and require custom handling. To customize how actions
  are handled, you can implement a custom action handler
  */
+
+open class KeyboardActionObject: Identifiable, Codable, Equatable{
+    public var id = ""
+    enum CodingKeys: CodingKey {
+        case id
+    }
+    public init(){
+        
+    }
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+    }
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+    }
+    public static func == (lhs: KeyboardActionObject, rhs: KeyboardActionObject) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+//open class KeyboardActionObject: Identifiable, Codable, Equatable{
+//    public var id = ""
+//    enum CodingKeys: CodingKey {
+//        case id
+//    }
+//    init(){
+//
+//    }
+//    required public init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        self.id = try container.decode(String.self, forKey: .id)
+//    }
+//    public func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.id, forKey: .id)
+//    }
+//    public static func == (lhs: KeyboardActionObject, rhs: KeyboardActionObject) -> Bool {
+//        lhs.id == rhs.id
+//    }
+//}
+
+
 public enum KeyboardAction: Codable, Equatable {
     
     /// Deletes text backwards when pressed and repeats that action until released.
@@ -48,6 +91,9 @@ public enum KeyboardAction: Codable, Equatable {
     /// A custom action that you can handle in any way you want, using a custom action handler.
     case custom(named: String)
     
+    /// Inserts a tab when tapped.
+    case custom_object(obj: KeyboardActionObject)
+
     /// Represents a dictation key.
     case dictation
     
@@ -113,6 +159,7 @@ public enum KeyboardAction: Codable, Equatable {
     
     /// Inserts a tab when tapped.
     case tab
+    
 }
 
 
